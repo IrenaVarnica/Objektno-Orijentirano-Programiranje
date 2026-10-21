@@ -1,41 +1,43 @@
 #include <iostream>
 #include <string>
+
 bool split_email(const std::string& email, std::string& user, std::string& domain) {
-	
+
 	auto zadnji = email.rfind("@");
 	auto prvi = email.find("@");
-	auto duljina = email.length();
 
 	if (prvi == std::string::npos) {
-		std::cout << "nema @!";
-		return false;
-	};
-	
-	if (email.find(".") == std::string::npos) {
-		std::cout << "nema tocke!";
+		std::cout << "nema @!" << std::endl;
 		return false;
 	};
 
 	if (zadnji != prvi) {
-		std::cout << "previse @!";
+		std::cout << "previse @!" << std::endl;
 		return false;
 	};
 
-	if (email.find_first_of("@") == 0) {
-		std::cout << "ne @ na pocetku!";
+	if (prvi == 0) {
+		std::cout << "ne @ na pocetku!" << std::endl;
 		return false;
 	};
 
-	if (email.find_first_of("@") == zadnji) {
-		std::cout << "ne @ na kraju!";
+	if (prvi == email.size() - 1) {
+		std::cout << "ne @ na kraju!" << std::endl;
 		return false;
 	};
 
-	domain.substr(prvi, duljina);
-	user.substr(0, prvi);
+	if (email.find('.', prvi) == std::string::npos) {
+		std::cout << "nema tocke u domeni!" << std::endl;
+		return false;
+	}
+
+
+
+	domain = email.substr(prvi + 1);
+	user = email.substr(0, prvi);
 	return true;
 };
-	
+
 
 int main() {
 	std::string email;
@@ -45,11 +47,11 @@ int main() {
 	std::getline(std::cin, email);
 
 
-	split_email(email, user, domain);
-
-	std::cout << "email" << email << std::endl;
-	std::cout << "user" << user << std::endl;
-	std::cout << "domain" << domain << std::endl;
+	if (split_email(email, user, domain)) {
+		std::cout << "email: " << email << std::endl;
+		std::cout << "user: " << user << std::endl;
+		std::cout << "domain: " << domain << std::endl;
+	}
 
 	return 0;
 }
